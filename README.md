@@ -18,7 +18,7 @@
     serverUrl: 'https://yourdomain.com',
     token: 'secure-token',
     companyId: 'abc123',
-    onMessage: (msg) => console.log('New message:', msg),
+    onMessage: (data) => console.log('message data:', data),
     onAssigned: (conversationId, userId) => console.log('Assigned to convo:', conversationId),
     onCloseConversation: (data) => console.log('Conversation closed:', data),
   });
