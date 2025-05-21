@@ -1,5 +1,5 @@
 {
-  "name": "@ens/livechat-client",
+  "name": "ens-livechat-client",
   "version": "1.0.1",
   "description": "Live chat WebSocket client for integration into customer-facing apps.",
   "keywords": ["livechat", "socket.io", "sdk", "real-time", "support"],
