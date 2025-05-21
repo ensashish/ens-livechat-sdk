@@ -7,5 +7,6 @@ export const SOCKET_EVENTS = {
     MESSAGE_SEND: 'message send',
     JOIN_ROOM: 'join room',
     SETUP: 'setup',
-    CONVERSATION_ASSIGNED_USER: 'conversation assigned user'
+    CONVERSATION_ASSIGNED_USER: 'conversation assigned user',
+    CLOSED_CONVERSATION_USER: 'close conversation received',
 };

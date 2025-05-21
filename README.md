@@ -19,7 +19,8 @@
     token: 'secure-token',
     companyId: 'abc123',
     onMessage: (msg) => console.log('New message:', msg),
-    onAssigned: (conversationId, userId) => console.log('Assigned to convo:', conversationId)
+    onAssigned: (conversationId, userId) => console.log('Assigned to convo:', conversationId),
+    onCloseConversation: (data) => console.log('Conversation closed:', data),
   });
   
   chat.connect();

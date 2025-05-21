@@ -1,18 +1,31 @@
 {
   "name": "ens-livechat-client",
-  "version": "1.0.3",
-  "description": "Live chat WebSocket client for integration into customer-facing apps.",
-  "keywords": ["livechat", "socket.io", "sdk", "real-time", "support"],
-  "license": "ISC",
-  "author": "Ashish Chandel",
-  "type": "commonjs",
+  "version": "1.0.6",
+  "description": "ENS Live Chat Client SDK",
+  "main": "index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "index.js",
+    "dist/"
+  ],
+  "type": "module",
+  "exports": {
+    "require": "./index.js",
+    "import": "./dist/esm/index.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c"
   },
   "dependencies": {
     "socket.io-client": "^4.7.2"
   },
-  "publishConfig": {
-    "access": "public"
+  "devDependencies": {
+    "rollup": "^3.26.3",
+    "rollup-plugin-terser": "^7.0.2",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@babel/core": "^7.22.20",
+    "@babel/preset-env": "^7.22.20"
   }
 }

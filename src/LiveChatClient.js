@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from './socketEvents.js';
 
 export class LiveChatClient {
-    constructor({ serverUrl, token, companyId, userType = 'customer', onMessage, onAssigned }) {
+    constructor({ serverUrl, token, companyId, userType = 'customer', onMessage, onAssigned, onCloseConversation }) {
         this.serverUrl = serverUrl;
         this.token = token;
         this.companyId = companyId;
@@ -10,6 +10,7 @@ export class LiveChatClient {
         this.userType = userType;
         this.onMessage = onMessage;
         this.onAssigned = onAssigned;
+        this.onCloseConversation = onCloseConversation;
         this.socket = null;
     }
 
@@ -24,7 +25,7 @@ export class LiveChatClient {
         });
 
         this.socket.on(SOCKET_EVENTS.CONNECT, () => {
-            console.log('||--:: ✅ENS Client Connected ::--||');
+            console.log('||--:: ✅ ENS Client Connected ::--||');
         });
 
         this.socket.on(SOCKET_EVENTS.MESSAGE_RECEIVED, (data) => {
@@ -36,6 +37,12 @@ export class LiveChatClient {
             const userId = data?.userId;
             this.onAssigned?.(conversationId, userId);
             if (conversationId) this.joinRoom(conversationId);
+        });
+
+        this.socket.on(CLOSED_CONVERSATION_USER, (data) => {
+            if (this.onCloseConversation) {
+              this.onCloseConversation(data);
+            }
         });
 
         this.socket.on(SOCKET_EVENTS.ERROR, (e) => console.warn("❗ Socket Error:", e));
