@@ -2,11 +2,11 @@ import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from './socketEvents.js';
 
 export class LiveChatClient {
-    constructor({ serverUrl, token, companyId, userId, userType = 'customer', onMessage, onAssigned }) {
+    constructor({ serverUrl, token, companyId, userType = 'customer', onMessage, onAssigned }) {
         this.serverUrl = serverUrl;
         this.token = token;
         this.companyId = companyId;
-        this.userId = userId;
+        this.userId = null;
         this.userType = userType;
         this.onMessage = onMessage;
         this.onAssigned = onAssigned;
@@ -24,8 +24,7 @@ export class LiveChatClient {
         });
 
         this.socket.on(SOCKET_EVENTS.CONNECT, () => {
-            console.log('✅ Connected');
-            this.connectToAgent();
+            console.log('||--:: ✅ENS Client Connected ::--||');
         });
 
         this.socket.on(SOCKET_EVENTS.MESSAGE_RECEIVED, (data) => {
@@ -44,29 +43,29 @@ export class LiveChatClient {
         this.socket.on(SOCKET_EVENTS.CONNECT_ERROR, (e) => console.error("🚫 Connection Error:", e));
     }
 
-    connectToAgent() {
+    connectToAgent(userId) {
         if (!this.socket) {
             console.warn("Socket not initialized");
             return;
         }
 
-        if (!this.companyId || !this.userId) {
+        if (!this.companyId || !userId) {
             throw new Error("companyId and userId are required");
         }
 
         this.socket.emit(SOCKET_EVENTS.SETUP, {
             companyId: this.companyId,
-            userId: this.userId,
+            userId: userId,
             userType: this.userType
         });
     }
 
-    sendMessage(conversationId, text) {
+    sendMessage(userId, conversationId, text) {
         if (!conversationId || !text) return;
         this.joinRoom(conversationId);
         this.socket.emit(SOCKET_EVENTS.MESSAGE_SEND, {
             conversationId,
-            senderId: this.userId,
+            senderId: userId,
             senderType: this.userType,
             text
         });
