@@ -39,7 +39,7 @@ export class LiveChatClient {
             if (conversationId) this.joinRoom(conversationId);
         });
 
-        this.socket.on(CLOSED_CONVERSATION_USER, (data) => {
+        this.socket.on(SOCKET_EVENTS.CLOSED_CONVERSATION_USER, (data) => {
             if (this.onCloseConversation) {
               this.onCloseConversation(data);
             }
