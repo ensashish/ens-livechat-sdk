@@ -21,7 +21,7 @@ export class LiveChatClient {
             reconnectionAttempts: 5,
             reconnectionDelay: 2000,
             path: '/agent/socket.io/',
-            auth: this.token ? { token: this.token } : undefined
+            auth: this.token && this.companyId ? { token: this.token, companyId: this.companyId } : undefined
         });
 
         this.socket.on(SOCKET_EVENTS.CONNECT, () => {
