@@ -26,7 +26,7 @@
   chat.connect();
 
   // connect to agent
-  chat.connectToAgent(`userId`);
+  chat.connectToAgent(`userId`, `chatSummary`);
   
   // Send a message
   chat.sendMessage('userId', 'conversationId', 'Hello there!');

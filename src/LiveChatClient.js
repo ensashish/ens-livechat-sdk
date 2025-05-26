@@ -50,7 +50,7 @@ export class LiveChatClient {
         this.socket.on(SOCKET_EVENTS.CONNECT_ERROR, (e) => console.error("🚫 Connection Error:", e));
     }
 
-    connectToAgent(userId) {
+    connectToAgent(userId, chatSummary) {
         if (!this.socket) {
             console.warn("Socket not initialized");
             return;
@@ -63,7 +63,8 @@ export class LiveChatClient {
         this.socket.emit(SOCKET_EVENTS.SETUP, {
             companyId: this.companyId,
             userId: userId,
-            userType: this.userType
+            userType: this.userType,
+            chatSummary: chatSummary
         });
     }
 
