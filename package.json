@@ -1,6 +1,6 @@
 {
   "name": "ens-livechat-client",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "ENS Live Chat Client SDK",
   "main": "index.js",
   "module": "dist/esm/index.js",
