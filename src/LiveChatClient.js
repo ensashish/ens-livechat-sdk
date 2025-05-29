@@ -50,7 +50,7 @@ export class LiveChatClient {
         this.socket.on(SOCKET_EVENTS.CONNECT_ERROR, (e) => console.error("🚫 Connection Error:", e));
     }
 
-    connectToAgent(userId, chatSummary) {
+    connectToAgent(userId, {chatTopic, chatSummary}) {
         if (!this.socket) {
             console.warn("Socket not initialized");
             return;
@@ -64,18 +64,20 @@ export class LiveChatClient {
             companyId: this.companyId,
             userId: userId,
             userType: this.userType,
+            chatTopic: chatTopic,
             chatSummary: chatSummary
         });
     }
 
-    sendMessage(userId, conversationId, text) {
+    sendMessage(userId, conversationId, text, type = 'text') {
         if (!conversationId || !text) return;
         this.joinRoom(conversationId);
         this.socket.emit(SOCKET_EVENTS.MESSAGE_SEND, {
             conversationId,
             senderId: userId,
             senderType: this.userType,
-            text
+            text,
+            type
         });
     }
 
