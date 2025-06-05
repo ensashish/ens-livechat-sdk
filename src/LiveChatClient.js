@@ -2,7 +2,7 @@ import { io } from 'socket.io-client';
 import { SOCKET_EVENTS } from './socketEvents.js';
 
 export class LiveChatClient {
-    constructor({ serverUrl, token, companyId, userType = 'customer', onMessage, onAssigned, onCloseConversation }) {
+    constructor({ serverUrl, token, companyId, userType = 'customer', onMessage, onAssigned, onCloseConversation, onFeedbackRequest }) {
         this.serverUrl = serverUrl;
         this.token = token;
         this.companyId = companyId;
@@ -11,6 +11,7 @@ export class LiveChatClient {
         this.onMessage = onMessage;
         this.onAssigned = onAssigned;
         this.onCloseConversation = onCloseConversation;
+        this.onFeedbackRequest = onFeedbackRequest;
         this.socket = null;
     }
 
@@ -40,9 +41,18 @@ export class LiveChatClient {
         });
 
         this.socket.on(SOCKET_EVENTS.CLOSED_CONVERSATION_USER, (data) => {
-            if (this.onCloseConversation) {
-              this.onCloseConversation(data);
-            }
+            this.onCloseConversation?.(data);
+        });
+
+        this.socket.on(SOCKET_EVENTS.FEEDBACK_REQUEST, (data) => {
+            const { conversationId, sender, userId, text } = data;
+            this.onFeedbackRequest?.({ conversationId, sender, userId, text });
+        });
+
+        this.socket.on(SOCKET_EVENTS.FEEDBACK_RECEIVED, (data) => {
+            const { conversationId, sender, text, userId } = data;
+            console.log(`Feedback confirmation received: ${text}`);
+            this.onMessage?.({ conversationId, sender, text, userId });
         });
 
         this.socket.on(SOCKET_EVENTS.ERROR, (e) => console.warn("❗ Socket Error:", e));
@@ -50,7 +60,7 @@ export class LiveChatClient {
         this.socket.on(SOCKET_EVENTS.CONNECT_ERROR, (e) => console.error("🚫 Connection Error:", e));
     }
 
-    connectToAgent(userId, {chatTopic, chatSummary}) {
+    connectToAgent(userId, { chatTopic, chatSummary }) {
         if (!this.socket) {
             console.warn("Socket not initialized");
             return;
@@ -60,6 +70,7 @@ export class LiveChatClient {
             throw new Error("companyId and userId are required");
         }
 
+        this.userId = userId; // Store userId for feedback
         this.socket.emit(SOCKET_EVENTS.SETUP, {
             companyId: this.companyId,
             userId: userId,
@@ -78,6 +89,25 @@ export class LiveChatClient {
             senderType: this.userType,
             text,
             type
+        });
+    }
+
+    sendFeedback(conversationId, feedback) {
+        if (!conversationId || !feedback || !feedback.rating_type || !feedback.rating) {
+            console.warn("Invalid feedback data");
+            return;
+        }
+        if (!this.socket) {
+            console.warn("Socket not initialized");
+            return;
+        }
+        this.socket.emit(SOCKET_EVENTS.FEEDBACK_RESPONSE, {
+            conversationId,
+            feedback: {
+                rating_type: feedback.rating_type, // 'thumbs' or 'star'
+                rating: feedback.rating, // e.g., 'thumbs_up', 'thumbs_down', or number for stars
+                comment: feedback.comment || '' // Optional comment
+            }
         });
     }
 

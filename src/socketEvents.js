@@ -9,4 +9,7 @@ export const SOCKET_EVENTS = {
     SETUP: 'setup',
     CONVERSATION_ASSIGNED_USER: 'conversation assigned user',
     CLOSED_CONVERSATION_USER: 'close conversation received',
+    FEEDBACK_REQUEST: 'feedback-request',
+    FEEDBACK_RESPONSE: 'feedback-response',
+    FEEDBACK_RECEIVED: 'feedback-received',
 };
